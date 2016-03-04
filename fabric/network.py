@@ -140,7 +140,7 @@ class HostConnectionCache(dict):
         Force a new connection to ``key`` host string.
         """
         from fabric.state import env
-        
+
         user, host, port = normalize(key)
         key = normalize_to_string(key)
         seek_gateway = True
@@ -402,6 +402,9 @@ def connect(user, host, port, cache, seek_gateway=True):
     # Initialization
     #
 
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
     # Init client
     client = ssh.SSHClient()
 
@@ -528,6 +531,11 @@ def connect(user, host, port, cache, seek_gateway=True):
                 # which one raised the exception. Best not to try.
                 prompt = "[%s] Passphrase for private key"
                 text = prompt % env.host_string
+
+            import traceback
+            print 'Traceback from host %s' % env.host_string
+            print traceback.format_exc()
+
             password = prompt_for_password(text)
             # Update env.password, env.passwords if empty
             set_password(user, host, port, password)
